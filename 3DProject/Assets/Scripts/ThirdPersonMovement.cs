@@ -6,6 +6,7 @@ public class ThirdPersonMovement : MonoBehaviour
 {
     public Rigidbody rb;
     public Transform Camera;
+    private Animator animate;
 
     private Vector3 slopeSlideVelocity;
     private Vector3 moveDir;
@@ -29,13 +30,12 @@ public class ThirdPersonMovement : MonoBehaviour
   
 
     //not sure about this 
-    int runningForwardHash;
-    int combatHash;
-    int deathHash;
-    int takeDamageHash;
-    int attackHash;
+    //int runningForwardHash;
+    //int combatHash;
+    //int deathHash;
+    //int takeDamageHash;
+    //int attackHash;
 
-    Animator animate;
 
     // Start is called before the first frame update
     void Start()
@@ -43,11 +43,11 @@ public class ThirdPersonMovement : MonoBehaviour
         rb = GetComponent<Rigidbody>();
 
         animate = GetComponent<Animator>();
-        runningForwardHash = Animator.StringToHash("runningForward");
-        combatHash=Animator.StringToHash("combat");
-        deathHash=Animator.StringToHash("death");
-        takeDamageHash=Animator.StringToHash("takeDamage");
-        attackHash=Animator.StringToHash("attack");
+        //runningForwardHash = Animator.StringToHash("runningForward");
+        //combatHash=Animator.StringToHash("combat");
+        //deathHash=Animator.StringToHash("death");
+        //takeDamageHash=Animator.StringToHash("takeDamage");
+        //attackHash=Animator.StringToHash("attack");
 
 
     }
@@ -70,12 +70,12 @@ public class ThirdPersonMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        bool runningForward = animate.GetBool(runningForwardHash);
-        //bool isJumping = animate.GetBool(name, true);
-        bool combat = animate.GetBool(combatHash);
-        bool death = animate.GetBool(deathHash);
-        bool takeDamage = animate.GetBool(takeDamageHash);
-        bool attack = animate.GetBool(attackHash);
+        //bool runningForward = animate.GetBool(runningForwardHash);
+        ////bool isJumping = animate.GetBool(name, true);
+        //bool combat = animate.GetBool(combatHash);
+        //bool death = animate.GetBool(deathHash);
+        //bool takeDamage = animate.GetBool(takeDamageHash);
+        //bool attack = animate.GetBool(attackHash);
         
 
         //get input from player 
@@ -87,6 +87,8 @@ public class ThirdPersonMovement : MonoBehaviour
         //player is moving
         if (direction.magnitude >= 0.1f) 
         {
+            //set running animation to true
+            animate.SetBool("IsMoving", true);
 
             //rotates the players body
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + Camera.eulerAngles.y;
@@ -114,20 +116,26 @@ public class ThirdPersonMovement : MonoBehaviour
 
             rb.velocity = velocity;
 
-            if (!runningForward)
-            {
+        //    if (!runningForward)
+        //    {
 
-               animate.SetBool("runningForward", true);
-            }
+        //       animate.SetBool("runningForward", true);
+        //    }
+
+        //}
+        //else {
+        //    //checks when to siwtch between the states 
+        //    if (runningForward)
+        //    {
+        //        animate.SetBool("runningForward", false);
+        //    }
 
         }
-        else {
-            //checks when to siwtch between the states 
-            if (runningForward)
-            {
-                animate.SetBool("runningForward", false);
-            }
 
+        //else not running update parameter to false
+        else
+        {
+            animate.SetBool("IsMoving", false);
         }
 
         //if player hits jump button 
