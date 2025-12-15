@@ -38,7 +38,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: HumanM@Run01_Forward
+      name: idle
       takeName: Untitled
       internalID: 3094330708855449807
       firstFrame: 0

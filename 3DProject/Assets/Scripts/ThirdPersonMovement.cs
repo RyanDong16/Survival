@@ -28,11 +28,28 @@ public class ThirdPersonMovement : MonoBehaviour
     private RaycastHit slopeHit;
   
 
+    //not sure about this 
+    int runningForwardHash;
+    int combatHash;
+    int deathHash;
+    int takeDamageHash;
+    int attackHash;
+
+    Animator animate;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+
+        animate = GetComponent<Animator>();
+        runningForwardHash = Animator.StringToHash("runningForward");
+        combatHash=Animator.StringToHash("combat");
+        deathHash=Animator.StringToHash("death");
+        takeDamageHash=Animator.StringToHash("takeDamage");
+        attackHash=Animator.StringToHash("attack");
+
+
     }
 
     //updates isGrounded
@@ -53,6 +70,14 @@ public class ThirdPersonMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        bool runningForward = animate.GetBool(runningForwardHash);
+        //bool isJumping = animate.GetBool(name, true);
+        bool combat = animate.GetBool(combatHash);
+        bool death = animate.GetBool(deathHash);
+        bool takeDamage = animate.GetBool(takeDamageHash);
+        bool attack = animate.GetBool(attackHash);
+        
+
         //get input from player 
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
@@ -62,6 +87,7 @@ public class ThirdPersonMovement : MonoBehaviour
         //player is moving
         if (direction.magnitude >= 0.1f) 
         {
+
             //rotates the players body
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + Camera.eulerAngles.y;
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
@@ -87,6 +113,21 @@ public class ThirdPersonMovement : MonoBehaviour
             velocity.z = moveDir.z * speed * control;
 
             rb.velocity = velocity;
+
+            if (!runningForward)
+            {
+
+               animate.SetBool("runningForward", true);
+            }
+
+        }
+        else {
+            //checks when to siwtch between the states 
+            if (runningForward)
+            {
+                animate.SetBool("runningForward", false);
+            }
+
         }
 
         //if player hits jump button 
@@ -99,9 +140,8 @@ public class ThirdPersonMovement : MonoBehaviour
                 isGrounded = false;
             }
         }
-    }
 
-   
+    }
 
     private void SetSlopeSlideVelocity()
     {
@@ -143,5 +183,4 @@ public class ThirdPersonMovement : MonoBehaviour
     {
         return Vector3.ProjectOnPlane(moveDir, slopeHit.normal);
     }
-   
 }
