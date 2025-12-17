@@ -169,7 +169,7 @@ public class ThirdPersonMovement : MonoBehaviour
         }
     }
 
-    private bool OnSlope()
+    public bool OnSlope()
     {
         //checks the ground beneath the player 
         if(Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f))
@@ -195,5 +195,10 @@ public class ThirdPersonMovement : MonoBehaviour
     private Vector3 GetSlopeMoveDirection()
     {
         return Vector3.ProjectOnPlane(moveDir, slopeHit.normal);
+    }
+
+    public bool CanAttack()
+    {
+        return horizontal == 0 && isGrounded;
     }
 }

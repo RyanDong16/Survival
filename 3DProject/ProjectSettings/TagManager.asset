@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Floor
+  - Bite
+  - Penguin
+  - Tiger
   layers:
   - Default
   - TransparentFX

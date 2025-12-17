@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public enum EnemyType
+public enum EnemyTypes
 {
     Patrol,     // Moves between pointA ↔ pointB
     Chaser      // Tiger that chases the player
@@ -11,7 +11,7 @@ public enum EnemyType
 public class TestEnemy : MonoBehaviour
 {
     [Header("Enemy Type")]
-    public EnemyType enemyType = EnemyType.Patrol;
+    public EnemyTypes enemyType = EnemyTypes.Patrol;
 
     [Header("Patrol Points")]
     public Transform pointA;
@@ -56,11 +56,11 @@ public class TestEnemy : MonoBehaviour
 
         switch (enemyType)
         {
-            case EnemyType.Chaser:
+            case EnemyTypes.Chaser:
                 ChaserBehavior();
                 break;
 
-            case EnemyType.Patrol:
+            case EnemyTypes.Patrol:
                 PatrolBehavior();
                 break;
         }
