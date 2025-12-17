@@ -58,7 +58,6 @@ public class ThirdPersonMovement : MonoBehaviour
         if(coll.contacts[0].normal.y > 0.5f)
         {
             isGrounded = true;
-            animate.SetBool("IsJumping", false);
         }
     }
 
@@ -90,7 +89,6 @@ public class ThirdPersonMovement : MonoBehaviour
         {
             //set running animation to true
             animate.SetBool("IsMoving", true);
-            
 
             //rotates the players body
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + Camera.eulerAngles.y;
@@ -138,19 +136,16 @@ public class ThirdPersonMovement : MonoBehaviour
         else
         {
             animate.SetBool("IsMoving", false);
-          
         }
 
         //if player hits jump button 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-
             if(isGrounded)
             {
                 rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z); //reset y
                 rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
                 isGrounded = false;
-                animate.SetBool("IsJumping", true);
             }
         }
 
@@ -200,5 +195,15 @@ public class ThirdPersonMovement : MonoBehaviour
     public bool CanAttack()
     {
         return horizontal == 0 && isGrounded;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        GameObject collidedWith = collision.gameObject;
+
+        if(collidedWith.CompareTag("Enemy"))
+        {
+            //play death scene
+        }
     }
 }
