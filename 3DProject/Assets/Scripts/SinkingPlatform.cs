@@ -2,14 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class SinkingPlatform : MonoBehaviour
 {
-    public float speed;
-    private Vector3 originPos;
+    public float sinkDistance = 1.5f;
+    public float speed = 2f;
 
-    public bool triggered = false;
+    private Vector3 originPos;
+    private Vector3 sinkPos;
+    private bool triggered = false;
 
     private AudioSource audioSource;
+
 
     void Awake()
     {
@@ -17,10 +21,10 @@ public class SinkingPlatform : MonoBehaviour
         audioSource.playOnAwake = false;
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         originPos = transform.position;
+        sinkPos = originPos + Vector3.down * sinkDistance;
     }
 
     // Update is called once per frame; wheen the player is colliding with platform
@@ -28,28 +32,33 @@ public class SinkingPlatform : MonoBehaviour
     {
         if (triggered)
         {
-            // sinking downwards
-            transform.Translate(Vector3.down * speed * Time.deltaTime);
+            // Smoothly sink to target position
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                sinkPos,
+                speed * Time.deltaTime
+            );
         }
         else
         {
-            // rising upwards to original position
-            transform.position = Vector3.MoveTowards(transform.position, originPos, speed * Time.deltaTime);
+            // Smoothly return to original position
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                originPos,
+                speed * Time.deltaTime
+            );
         }
     }
 
     // Collision activation
-     void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             triggered = true;
 
-            // Play sink sound
             if (!audioSource.isPlaying)
                 audioSource.Play();
-
-            other.transform.SetParent(transform);
         }
     }
 
@@ -59,7 +68,7 @@ public class SinkingPlatform : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             triggered = false;
-            other.transform.SetParent(null);
+            audioSource.Stop();
         }
     }
 }
