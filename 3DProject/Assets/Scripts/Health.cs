@@ -5,7 +5,10 @@ using UnityEngine;
 public class Health : MonoBehaviour
 {
     [SerializeField] private float startingHealth;
+    [SerializeField] private AudioClip hurtSound;
+
     private PlayerInventory totalCoins;
+
     //lets you get this variable from other scripts 
     public float currentHealth { get; private set; }
 
@@ -22,6 +25,7 @@ public class Health : MonoBehaviour
         if (currentHealth > 0)
         {
             //player hurt
+            SoundManager.Instance.PlaySound(hurtSound);
         }
 
         else
@@ -41,6 +45,7 @@ public class Health : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             TakeDamage(1);
+            SoundManager.Instance.PlaySound(hurtSound);
         }
 
        // if coins collected is equal to multiple of 15 and if health is not full then add life
