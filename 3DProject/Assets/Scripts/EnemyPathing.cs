@@ -18,6 +18,9 @@ public class EnemyPathing : MonoBehaviour
     public Transform pointB;
     private Transform target;
 
+    [Header("Hitbox")]
+    public GameObject bite;
+
     [Header("Chase Settings")]
     public float detectionRange = 8f;
     public float attackRange = 2f;
@@ -58,6 +61,7 @@ public class EnemyPathing : MonoBehaviour
         {
             case EnemyType.Chaser:
                 ChaserBehavior();
+                PatrolBehavior();
                 break;
 
             case EnemyType.Patrol:
@@ -141,9 +145,13 @@ public class EnemyPathing : MonoBehaviour
 
     IEnumerator ResetAttackCooldown()
     {
+        bite.SetActive(true);   // turn hitbox ON
+        yield return new WaitForSeconds(0.3f); // active only during the bite
+        bite.SetActive(false);  // turn hitbox OFF
         yield return new WaitForSeconds(attackCooldown);
         coolDown = false;
     }
+
 
     void OnTriggerEnter(Collider other)
     {
