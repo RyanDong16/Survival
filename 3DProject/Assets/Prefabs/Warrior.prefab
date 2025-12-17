@@ -9,8 +9,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: f7da5f4ee09b24463b513b97ea7c3347, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.7
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f7da5f4ee09b24463b513b97ea7c3347, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.7
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f7da5f4ee09b24463b513b97ea7c3347, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.7
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f7da5f4ee09b24463b513b97ea7c3347, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f7da5f4ee09b24463b513b97ea7c3347, type: 3}
       propertyPath: m_LocalPosition.y
@@ -18,7 +30,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f7da5f4ee09b24463b513b97ea7c3347, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 40
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f7da5f4ee09b24463b513b97ea7c3347, type: 3}
       propertyPath: m_LocalRotation.w
@@ -51,6 +63,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: f7da5f4ee09b24463b513b97ea7c3347, type: 3}
       propertyPath: m_Name
       value: Warrior
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f7da5f4ee09b24463b513b97ea7c3347, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -89,7 +105,7 @@ MonoBehaviour:
   rb: {fileID: 4195833912030751831}
   Camera: {fileID: 0}
   speed: 6
-  jumpForce: 5
+  jumpForce: 10
   airMult: 0.4
   turnSmoothTime: 0.1
   isGrounded: 0
