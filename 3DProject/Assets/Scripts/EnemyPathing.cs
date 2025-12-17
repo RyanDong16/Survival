@@ -16,15 +16,30 @@ public class EnemyPathing : MonoBehaviour
     
     public float sightRange;
     public bool playerInRange;
+    //Animator animate;
 
-
+    void Start()
+    { 
+        //animate = GetComponent<Animator>();
+    }
 
     private void Patorl(){
-
+        //animate.SetBool("IsMoving", true);
     }
 
     private void ChasePlayer(){
-
+        //animate.SetBool("IsMoving", true);
+        ////chase down player 
+        //animate.SetBool("IsMoving", false);
+        ////call Attack
+        
+    }
+    private void Attack()
+    {
+        //animate.SetBool("IsAttack", true);
+        ////game play code for attacking 
+        //animate.SetBool("IsAttack", false);
     }
 
 }
+
