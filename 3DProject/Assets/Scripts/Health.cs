@@ -5,6 +5,7 @@ using UnityEngine;
 public class Health : MonoBehaviour
 {
     [SerializeField] private float startingHealth;
+    private PlayerInventory totalCoins;
     //lets you get this variable from other scripts 
     public float currentHealth { get; private set; }
 
@@ -29,11 +30,23 @@ public class Health : MonoBehaviour
         }
     }
 
+    //adds a heart to player health 
+    public void AddHealth(float _value)
+    {
+        currentHealth = Mathf.Clamp(currentHealth + _value, 0, startingHealth);
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
             TakeDamage(1);
+        }
+
+        //if coins collected is equal to multiple of 15 and if health is not full then add life
+        if(totalCoins.NumberOfCoins % 15 == 0 && currentHealth < startingHealth)
+        {
+            AddHealth(1);
         }
     }
 }
