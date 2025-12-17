@@ -43,10 +43,10 @@ public class Health : MonoBehaviour
             TakeDamage(1);
         }
 
-        //if coins collected is equal to multiple of 15 and if health is not full then add life
-        if(totalCoins.NumberOfCoins % 15 == 0 && currentHealth < startingHealth)
-        {
-            AddHealth(1);
-        }
+       // if coins collected is equal to multiple of 15 and if health is not full then add life
+        //if (totalCoins.NumberOfCoins % 15 == 0 && currentHealth < startingHealth)
+        //{
+        //    AddHealth(1);
+        //}
     }
 }
