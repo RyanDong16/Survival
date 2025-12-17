@@ -9,6 +9,14 @@ public class SinkingPlatform : MonoBehaviour
 
     public bool triggered = false;
 
+    private AudioSource audioSource;
+
+    void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,7 +44,12 @@ public class SinkingPlatform : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             triggered = true;
-            // other.transform.SetParent(transform);
+
+            // Play sink sound
+            if (!audioSource.isPlaying)
+                audioSource.Play();
+
+            other.transform.SetParent(transform);
         }
     }
 
@@ -46,7 +59,7 @@ public class SinkingPlatform : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             triggered = false;
-            // other.transform.SetParent(null);
+            other.transform.SetParent(null);
         }
     }
 }

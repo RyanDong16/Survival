@@ -7,11 +7,23 @@ public class FallingPlatform : MonoBehaviour
     bool isFalling = false;
     float downSpeed = 0;
 
+    private AudioSource audioSource;
+
+    void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+    }
+
     // Trigger with player steps on platform
     void OnTriggerEnter(Collider collider)
     {
         if (collider.gameObject.name == "Player")
             isFalling = true;
+
+            // Play falling sound
+            audioSource.Play();
+            
             Destroy(gameObject, 1);
     }
 

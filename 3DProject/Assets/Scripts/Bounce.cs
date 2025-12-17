@@ -7,6 +7,14 @@ public class Bounce : MonoBehaviour
     [SerializeField] string playerTag;
     [SerializeField] float bounceForce;
 
+    private AudioSource audioSource;
+
+    void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+    }
+
     // player collides with mushroom object
     private void OnCollisionEnter(Collision collision)
     {
@@ -16,17 +24,9 @@ public class Bounce : MonoBehaviour
 
             otherRB.AddExplosionForce(bounceForce, collision.contacts[0].point, 5);
         }
+        // Play bounce sound
+        audioSource.Play();
     }
+    
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
