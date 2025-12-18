@@ -5,25 +5,25 @@ using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
-    //public GameObject gameOverMenu;
+    public GameObject gameOverMenu;
 
-    //private void OnEnable()
-    //{
-      //  PlayerHealth OnPlayerDeath += EnableGameOverMenu;
-    //}
+    private void OnEnable()
+    {
+        Health.OnPlayerDeath += EnableGameOverMenu;
+    }
 
-    //private void OnDisable()
-    //{
-     //   PlayerHealth OnPlayerDeath -= EnableGameOverMenu;
-    //}
+    private void OnDisable()
+    {
+        Health.OnPlayerDeath -= EnableGameOverMenu;
+    }
 
-    //public void EnableGameOverMenu()
-    //{
-      //  gameOverMenu SetActive(true);
-    //}
+    public void EnableGameOverMenu()
+    {
+        gameOverMenu.SetActive(true);
+    }
 
-    //public void RestartLevel()
-    //{
-      //  SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    //}
+    public void RestartLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
+    }
 }

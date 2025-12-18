@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Health : MonoBehaviour
 {
+    public static event Action OnPlayerDeath;
     [SerializeField] private float startingHealth;
     [SerializeField] private AudioClip hurtSound;
 
@@ -75,6 +77,10 @@ public class Health : MonoBehaviour
         {
             StartCoroutine(TookDamage());
         }
+        if (collision.gameObject.CompareTag("Water"))
+        {
+            OnPlayerDeath?.Invoke();
+        }
     }
 
     private IEnumerator TookDamage()
@@ -86,6 +92,11 @@ public class Health : MonoBehaviour
             SoundManager.Instance.PlaySound(hurtSound);
             yield return new WaitForSeconds(1f);
             stopDamage = false;
+        }
+
+        if (currentHealth == 0)
+        {
+            OnPlayerDeath?.Invoke();
         }
     }
 
