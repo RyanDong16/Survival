@@ -75,6 +75,7 @@ public class EnemyPathing : MonoBehaviour
 
     void PatrolBehavior()
     {
+        anim.SetBool("IsMoving", true);
         // If returning home, wait until we arrive
         if (Vector3.Distance(transform.position, homePosition) > 1f &&
             agent.destination == homePosition)

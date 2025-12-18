@@ -1355,6 +1355,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1611481920332591661, guid: d0552e1272e104187b82cb4278cd145c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 1e95df620ca6ea34b87c25f8673ef693, type: 2}
+    - target: {fileID: 3217607612807764291, guid: d0552e1272e104187b82cb4278cd145c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 1e95df620ca6ea34b87c25f8673ef693, type: 2}
     - target: {fileID: 5768280481372610064, guid: d0552e1272e104187b82cb4278cd145c, type: 3}
       propertyPath: m_Name
       value: Warrior
@@ -1399,6 +1407,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7474032647392443482, guid: d0552e1272e104187b82cb4278cd145c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 76c860999333d3249935a11048231000, type: 2}
+    - target: {fileID: 7984111296627070936, guid: d0552e1272e104187b82cb4278cd145c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 1e95df620ca6ea34b87c25f8673ef693, type: 2}
+    - target: {fileID: 8367665467262044625, guid: d0552e1272e104187b82cb4278cd145c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 1e95df620ca6ea34b87c25f8673ef693, type: 2}
     - target: {fileID: 9184044807004769920, guid: d0552e1272e104187b82cb4278cd145c, type: 3}
       propertyPath: Camera
       value: 
