@@ -8,6 +8,8 @@ TagManager:
   - Bite
   - Penguin
   - Tiger
+  - Treasure
+  - Water
   layers:
   - Default
   - TransparentFX
