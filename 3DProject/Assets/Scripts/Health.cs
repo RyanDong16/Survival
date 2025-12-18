@@ -25,7 +25,7 @@ public class Health : MonoBehaviour
         //makes sure that health doesnt go under 0 or max value 
         currentHealth = Mathf.Clamp(currentHealth - _damage, 0, startingHealth);
 
-        if (currentHealth > 0)
+        if (currentHealth >= 0)
         {
             //player hurt
             SoundManager.Instance.PlaySound(hurtSound);
@@ -34,6 +34,7 @@ public class Health : MonoBehaviour
         else
         {
             //player dead 
+            OnPlayerDeath?.Invoke();
         }
     }
 
@@ -64,6 +65,11 @@ public class Health : MonoBehaviour
         {
             StartCoroutine(TookDamage());
         }
+
+        if (other.gameObject.CompareTag("Water"))
+        {
+            OnPlayerDeath?.Invoke();
+        }
     }
 
     void OnCollisionEnter(Collision collision)
@@ -77,10 +83,6 @@ public class Health : MonoBehaviour
         {
             StartCoroutine(TookDamage());
         }
-        if (collision.gameObject.CompareTag("Water"))
-        {
-            OnPlayerDeath?.Invoke();
-        }
     }
 
     private IEnumerator TookDamage()
@@ -93,13 +95,6 @@ public class Health : MonoBehaviour
             yield return new WaitForSeconds(1f);
             stopDamage = false;
         }
-
-        if (currentHealth == 0)
-        {
-            OnPlayerDeath?.Invoke();
-        }
     }
-
-
 }
 
