@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class PlayerAttack : MonoBehaviour
 {
     [SerializeField] private float attackCooldown;
@@ -9,6 +10,13 @@ public class PlayerAttack : MonoBehaviour
     private Animator anim;
     private ThirdPersonMovement playerMovement;
     private float coolDownTimer = Mathf.Infinity;
+
+    [Header("Hitbox")]
+    public GameObject Sword;
+    public float hitboxDistance = 1f;
+    public float hitboxDuration = 0.2f;
+
+    
 
     private void Awake()
     {
@@ -19,17 +27,28 @@ public class PlayerAttack : MonoBehaviour
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Q) && coolDownTimer > attackCooldown && playerMovement.CanAttack()) {
-            Attack();
+            StartCoroutine(Attack());
         }
 
         coolDownTimer += Time.deltaTime;
     }
 
-    private void Attack()
+    private IEnumerator Attack()
     {
-        SoundManager.Instance.PlaySound(attackSound);
-        anim.SetTrigger("Attack");
-        coolDownTimer = 0; 
+        GameObject hitbox = Instantiate(Sword);
+
+        float timer = 0f;
+        while (timer < 0.5f)
+        {
+            hitbox.transform.position = transform.position + transform.forward * 1f;
+            hitbox.transform.rotation = transform.rotation;
+
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        Destroy(hitbox);
     }
+
 
 }
