@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -37,6 +38,8 @@ public class PlayerAttack : MonoBehaviour
     {
         GameObject hitbox = Instantiate(Sword);
 
+        anim.SetTrigger("Attack");
+        SoundManager.Instance.PlaySound(attackSound);
         float timer = 0f;
         while (timer < 0.5f)
         {

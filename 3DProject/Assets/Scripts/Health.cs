@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Health : MonoBehaviour
 {
@@ -30,10 +31,9 @@ public class Health : MonoBehaviour
             //player hurt
             SoundManager.Instance.PlaySound(hurtSound);
         }
-
         else
         {
-            //player dead 
+            //player dead
             OnPlayerDeath?.Invoke();
         }
     }
@@ -66,11 +66,6 @@ public class Health : MonoBehaviour
         {
             StartCoroutine(TookDamage());
         }
-
-        if (other.gameObject.CompareTag("Water")
-        {
-            OnPlayerDeath?.Invoke();
-        }
     }
 
     void OnCollisionEnter(Collision collision)
@@ -84,6 +79,10 @@ public class Health : MonoBehaviour
         {
             StartCoroutine(TookDamage());
         }
+        if (collision.gameObject.CompareTag("Water"))
+        {
+            StartCoroutine(TookDamage());
+        }
     }
 
     private IEnumerator TookDamage()
@@ -92,10 +91,18 @@ public class Health : MonoBehaviour
         {
             stopDamage = true;
             TakeDamage(1);
-            SoundManager.Instance.PlaySound(hurtSound);
+
+            if (currentHealth <= 0)
+            {
+                OnPlayerDeath?.Invoke();
+                SceneManager.LoadScene(2);
+                yield break;
+            }
+
             yield return new WaitForSeconds(1f);
             stopDamage = false;
         }
     }
+
 }
 
