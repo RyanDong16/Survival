@@ -169,6 +169,10 @@ PrefabInstance:
       propertyPath: pointB
       value: 
       objectReference: {fileID: 7103268684524996410}
+    - target: {fileID: 3763951694256691387, guid: 8741cd6c8b9fc3947999191d0c381f50, type: 3}
+      propertyPath: enemyType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5883155896844355918, guid: 8741cd6c8b9fc3947999191d0c381f50, type: 3}
       propertyPath: m_Name
       value: Tiger

@@ -10,7 +10,6 @@ public class ThirdPersonMovement : MonoBehaviour
     private Animator animate;
     public AudioSource runSound;
 
-    private Vector3 slopeSlideVelocity;
     private Vector3 moveDir;
 
     public float speed = 6f;
@@ -23,49 +22,26 @@ public class ThirdPersonMovement : MonoBehaviour
     float vertical;
 
     public bool isGrounded;
-    public bool isSliding;
 
     public float playerHeight;
-
     public float maxSlopeAngle;
     private RaycastHit slopeHit;
 
     [SerializeField] private AudioClip deathSound;
     [SerializeField] private AudioClip jumpSound;
 
-    //not sure about this 
-    //int runningForwardHash;
-    //int combatHash;
-    //int deathHash;
-    //int takeDamageHash;
-    //int attackHash;
-
-
-    // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-
         animate = GetComponent<Animator>();
-        //runningForwardHash = Animator.StringToHash("runningForward");
-        //combatHash=Animator.StringToHash("combat");
-        //deathHash=Animator.StringToHash("death");
-        //takeDamageHash=Animator.StringToHash("takeDamage");
-        //attackHash=Animator.StringToHash("attack");
-
-
     }
 
-    //updates isGrounded
     private void OnCollisionStay(Collision coll)
     {
-        if(coll.contacts[0].normal.y > 0.5f)
-        {
+        if (coll.contacts[0].normal.y > 0.5f)
             isGrounded = true;
-        }
     }
 
-    //updates isGrounded
     private void OnCollisionExit(Collision coll)
     {
         isGrounded = false;
@@ -74,146 +50,87 @@ public class ThirdPersonMovement : MonoBehaviour
     private IEnumerator DeathCoroutine()
     {
         SoundManager.Instance.PlaySound(deathSound);
-
-        //waits for sound to finish
         yield return new WaitForSeconds(deathSound.length);
-
-        //return to beginning of level/menu? 
+        // Reload scene or menu here
     }
 
-    // Update is called once per frame
     void Update()
     {
-        //bool runningForward = animate.GetBool(runningForwardHash);
-        ////bool isJumping = animate.GetBool(name, true);
-        //bool combat = animate.GetBool(combatHash);
-        //bool death = animate.GetBool(deathHash);
-        //bool takeDamage = animate.GetBool(takeDamageHash);
-        //bool attack = animate.GetBool(attackHash);
-        
-
-        //get input from player 
+        // -------------------------
+        // INPUT
+        // -------------------------
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
 
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
         bool isMoving = direction.magnitude >= 0.1f;
 
-        //player is moving
-        //if (direction.magnitude >= 0.1f)
-        if(isMoving && isGrounded)
+        // -------------------------
+        // ROTATION
+        // -------------------------
+        if (isMoving)
         {
-            if(!runSound.isPlaying)
-            {
-                runSound.Play();
-            }
-            //enables footstep sounds
-           // footstepsSound.enabled = true;
-
-            //set running animation to true
-            animate.SetBool("IsMoving", true);
-
-            //rotates the players body
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + Camera.eulerAngles.y;
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
             moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-
-            //check if player is on slope and ground
-            if(OnSlope() && isGrounded)
-            {
-                moveDir = Vector3.ProjectOnPlane(moveDir, slopeHit.normal);
-            }
-
-            //moves the player 
-            //Vector3 Velocity = moveDir.normalized * speed;
-            Vector3 velocity = rb.velocity;
-
-            //air control
-            float control = isGrounded ? 1f : airMult;
-
-            //velocity based on whether player is on ground or air 
-            velocity.x = moveDir.x * speed * control;
-            velocity.z = moveDir.z * speed * control;
-
-            rb.velocity = velocity;
-
-        //    if (!runningForward)
-        //    {
-
-        //       animate.SetBool("runningForward", true);
-        //    }
-
-        //}
-        //else {
-        //    //checks when to siwtch between the states 
-        //    if (runningForward)
-        //    {
-        //        animate.SetBool("runningForward", false);
-        //    }
-
         }
-
-        //else not running update parameter to false and footsteps
         else
         {
-            if (runSound.isPlaying)
-            {
-                runSound.Stop();
-            }
-           // footstepsSound.enabled = false;
+            moveDir = Vector3.zero;   // ← prevents sliding after landing
+        }
+
+        // -------------------------
+        // MOVEMENT (ground + air)
+        // -------------------------
+        Vector3 velocity = rb.velocity;
+        float control = isGrounded ? 1f : airMult;
+
+        velocity.x = moveDir.x * speed * control;
+        velocity.z = moveDir.z * speed * control;
+
+        rb.velocity = new Vector3(velocity.x, rb.velocity.y, velocity.z);
+
+        // Extra friction when grounded and not moving
+        if (isGrounded && !isMoving)
+        {
+            rb.velocity = new Vector3(0, rb.velocity.y, 0);
+        }
+
+        // -------------------------
+        // ANIMATIONS + FOOTSTEPS
+        // -------------------------
+        if (isMoving && isGrounded)
+        {
+            animate.SetBool("IsMoving", true);
+            if (!runSound.isPlaying) runSound.Play();
+        }
+        else
+        {
             animate.SetBool("IsMoving", false);
+            if (runSound.isPlaying) runSound.Stop();
         }
 
-        //if player hits jump button 
-        if (Input.GetKeyDown(KeyCode.Space))
+        // -------------------------
+        // JUMP
+        // -------------------------
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
-            if(isGrounded)
-            {
-                SoundManager.Instance.PlaySound(jumpSound);
-                rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z); //reset y
-                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-                isGrounded = false;
-            }
-        }
-
-    }
-
-    private void SetSlopeSlideVelocity()
-    {
-        //use physics ray cast to check the ground under the player, only proceed if theres been a hit
-        if(Physics.Raycast(transform.position + Vector3.up, Vector3.down, out RaycastHit hitInfo, 5))
-        {
-            //get slope angle 
-            float angle = Vector3.Angle(hitInfo.normal, Vector3.up);
-
-            //check if its greater or equal to slope limit 
-            //if(angle >= rb.slopeLimit)
+            rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            isGrounded = false;
         }
     }
 
     public bool OnSlope()
     {
-        //checks the ground beneath the player 
-        if(Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f))
+        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f))
         {
-            //get how steep slope angle is
             float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
-            //return true if angle is less than max slope angle
             return angle < maxSlopeAngle && angle != 0;
-           // {
-               /// float ySpeed = rb.velocity.y;
-                //if on slope set slope slide velocity
-               // slopeSlideVelocity = Vector3.ProjectOnPlane(new Vector3(0, ySpeed, 0), slopeHit.normal);
-                //return;
-            //}
-           //return angle < maxSlopeAngle && angle != 0;
         }
         return false;
-
-        //if character is on any ground steep enough to need a slide set slide velocity to 0 
-        //slopeSlideVelocity = Vector3.zero;
     }
 
     private Vector3 GetSlopeMoveDirection()
@@ -228,11 +145,8 @@ public class ThirdPersonMovement : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        GameObject collidedWith = collision.gameObject;
-
-        if(collidedWith.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag("Water"))
         {
-            //play death scene
             StartCoroutine(DeathCoroutine());
         }
     }
