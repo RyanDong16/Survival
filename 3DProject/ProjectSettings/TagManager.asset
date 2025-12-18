@@ -10,6 +10,7 @@ TagManager:
   - Tiger
   - Treasure
   - Water
+  - Sword
   layers:
   - Default
   - TransparentFX

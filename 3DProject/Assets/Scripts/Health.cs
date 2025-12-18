@@ -34,6 +34,7 @@ public class Health : MonoBehaviour
         else
         {
             //player dead 
+            OnPlayerDeath?.Invoke();
         }
     }
 
@@ -45,12 +46,13 @@ public class Health : MonoBehaviour
 
     private void Update()
     {
+        /*
         if (Input.GetKeyDown(KeyCode.E))
         {
             TakeDamage(1);
             SoundManager.Instance.PlaySound(hurtSound);
         }
-
+        */
        // if coins collected is equal to multiple of 15 and if health is not full then add life
         //if (totalCoins.NumberOfCoins % 15 == 0 && currentHealth < startingHealth)
         //{
@@ -63,6 +65,10 @@ public class Health : MonoBehaviour
         if (other.CompareTag("Bite"))
         {
             StartCoroutine(TookDamage());
+        }
+        if (other.CompareTag("Water"))
+        {
+            OnPlayerDeath?.Invoke();
         }
     }
 
@@ -92,11 +98,6 @@ public class Health : MonoBehaviour
             SoundManager.Instance.PlaySound(hurtSound);
             yield return new WaitForSeconds(1f);
             stopDamage = false;
-        }
-
-        if (currentHealth == 0)
-        {
-            OnPlayerDeath?.Invoke();
         }
     }
 
