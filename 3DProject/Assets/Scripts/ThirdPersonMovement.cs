@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ThirdPersonMovement : MonoBehaviour
 {
     public Rigidbody rb;
     public Transform Camera;
     private Animator animate;
+    public AudioSource runSound;
 
     private Vector3 slopeSlideVelocity;
     private Vector3 moveDir;
@@ -27,7 +29,9 @@ public class ThirdPersonMovement : MonoBehaviour
 
     public float maxSlopeAngle;
     private RaycastHit slopeHit;
-  
+
+    [SerializeField] private AudioClip deathSound;
+    [SerializeField] private AudioClip jumpSound;
 
     //not sure about this 
     //int runningForwardHash;
@@ -58,7 +62,6 @@ public class ThirdPersonMovement : MonoBehaviour
         if(coll.contacts[0].normal.y > 0.5f)
         {
             isGrounded = true;
-            animate.SetBool("IsJumping", false);
         }
     }
 
@@ -66,6 +69,16 @@ public class ThirdPersonMovement : MonoBehaviour
     private void OnCollisionExit(Collision coll)
     {
         isGrounded = false;
+    }
+
+    private IEnumerator DeathCoroutine()
+    {
+        SoundManager.Instance.PlaySound(deathSound);
+
+        //waits for sound to finish
+        yield return new WaitForSeconds(deathSound.length);
+
+        //return to beginning of level/menu? 
     }
 
     // Update is called once per frame
@@ -84,13 +97,21 @@ public class ThirdPersonMovement : MonoBehaviour
         vertical = Input.GetAxisRaw("Vertical");
 
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+        bool isMoving = direction.magnitude >= 0.1f;
 
         //player is moving
-        if (direction.magnitude >= 0.1f) 
+        //if (direction.magnitude >= 0.1f)
+        if(isMoving && isGrounded)
         {
+            if(!runSound.isPlaying)
+            {
+                runSound.Play();
+            }
+            //enables footstep sounds
+           // footstepsSound.enabled = true;
+
             //set running animation to true
             animate.SetBool("IsMoving", true);
-            
 
             //rotates the players body
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + Camera.eulerAngles.y;
@@ -134,23 +155,26 @@ public class ThirdPersonMovement : MonoBehaviour
 
         }
 
-        //else not running update parameter to false
+        //else not running update parameter to false and footsteps
         else
         {
+            if (runSound.isPlaying)
+            {
+                runSound.Stop();
+            }
+           // footstepsSound.enabled = false;
             animate.SetBool("IsMoving", false);
-          
         }
 
         //if player hits jump button 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-
             if(isGrounded)
             {
+                SoundManager.Instance.PlaySound(jumpSound);
                 rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z); //reset y
                 rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
                 isGrounded = false;
-                animate.SetBool("IsJumping", true);
             }
         }
 
@@ -200,5 +224,16 @@ public class ThirdPersonMovement : MonoBehaviour
     public bool CanAttack()
     {
         return horizontal == 0 && isGrounded;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        GameObject collidedWith = collision.gameObject;
+
+        if(collidedWith.CompareTag("Enemy"))
+        {
+            //play death scene
+            StartCoroutine(DeathCoroutine());
+        }
     }
 }

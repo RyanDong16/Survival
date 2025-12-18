@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
-    [SerializeField] private float attackCooldown; 
+    [SerializeField] private float attackCooldown;
+    [SerializeField] private AudioClip attackSound;
     private Animator anim;
     private ThirdPersonMovement playerMovement;
     private float coolDownTimer = Mathf.Infinity;
@@ -26,6 +27,7 @@ public class PlayerAttack : MonoBehaviour
 
     private void Attack()
     {
+        SoundManager.Instance.PlaySound(attackSound);
         anim.SetTrigger("Attack");
         coolDownTimer = 0; 
     }
