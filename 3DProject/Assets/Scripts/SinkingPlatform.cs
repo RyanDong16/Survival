@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class SinkingPlatform : MonoBehaviour
 {
-    public float speed;
-    private Vector3 originPos;
+    public float speed = 2f;
 
+    private Vector3 originPos;
     public bool triggered = false;
 
     private AudioSource audioSource;
@@ -17,13 +18,12 @@ public class SinkingPlatform : MonoBehaviour
         audioSource.playOnAwake = false;
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         originPos = transform.position;
     }
 
-    // Update is called once per frame; wheen the player is colliding with platform
+    // Update is called once per frame
     void Update()
     {
         if (triggered)
@@ -34,12 +34,16 @@ public class SinkingPlatform : MonoBehaviour
         else
         {
             // rising upwards to original position
-            transform.position = Vector3.MoveTowards(transform.position, originPos, speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                originPos,
+                speed * Time.deltaTime
+            );
         }
     }
 
-    // Collision activation
-     void OnTriggerEnter(Collider other)
+    // Player steps on platform
+    void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
@@ -48,18 +52,15 @@ public class SinkingPlatform : MonoBehaviour
             // Play sink sound
             if (!audioSource.isPlaying)
                 audioSource.Play();
-
-            other.transform.SetParent(transform);
         }
     }
 
-    // Collision deactivation
+    // Player steps off platform
     void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             triggered = false;
-            other.transform.SetParent(null);
         }
     }
 }
