@@ -8,6 +8,7 @@ public class Health : MonoBehaviour
     [SerializeField] private AudioClip hurtSound;
 
     private PlayerInventory totalCoins;
+    public bool stopDamage;
 
     //lets you get this variable from other scripts 
     public float currentHealth { get; private set; }
@@ -54,4 +55,40 @@ public class Health : MonoBehaviour
         //    AddHealth(1);
         //}
     }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Bite"))
+        {
+            StartCoroutine(TookDamage());
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        //Debug.Log("Hit: " + collision.gameObject.tag);
+        if (collision.gameObject.CompareTag("Penguin"))
+        {
+            StartCoroutine(TookDamage());
+        }
+        if (collision.gameObject.CompareTag("Tiger"))
+        {
+            StartCoroutine(TookDamage());
+        }
+    }
+
+    private IEnumerator TookDamage()
+    {
+        if (!stopDamage)
+        {
+            stopDamage = true;
+            TakeDamage(1);
+            SoundManager.Instance.PlaySound(hurtSound);
+            yield return new WaitForSeconds(1f);
+            stopDamage = false;
+        }
+    }
+
+
 }
+
